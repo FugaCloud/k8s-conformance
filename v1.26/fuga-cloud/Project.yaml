@@ -1,0 +1,8 @@
+vendor: "Fuga Cloud"
+name: "Enterprise Managed Kubernetes (EMK)"
+version: 20240429_v12613
+website_url: "https://fuga.cloud/emk/"
+documentation_url: "https://docs.fuga.cloud"
+type: "hosted platform"
+description: "Simplify your cloud-native journey with Enterprised Managed Kubernetes (EMK). Powered by Gardener, deploy, manage, and scale your containerized apps effortlessly on Fuga Cloud and beyond—all GDPR compliant."
+contact_email_address: "info@fuga.cloud"
