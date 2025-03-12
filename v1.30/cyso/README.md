@@ -1,15 +1,15 @@
-# Conformance tests for Fuga Cloud Enterprise Managed Kubernetes (EMK)
+# Conformance tests for Cyso Managed Kubernetes
 
-## Enterprise Managed Kubernetes (EMK) (based on Kubernetes v1.29)
+## Managed Kubernetes (based on Kubernetes v1.30)
 
-Fuga Cloud's Enterprise Managed Kubernetes (EMK) is a GDPR-compliant solution for managing Kubernetes clusters. It offers self-service orchestration, centralized management, and optional professional services. Create clusters using cloud-native tools, and benefit from high resilience and optimized costs through autoscaling and hibernation. EMK is a robust and reliable solution with a touch of Dutch innovation.
+Cyso's Managed Kubernetes is a GDPR-compliant solution for managing Kubernetes clusters. It offers self-service orchestration, centralized management, and optional professional services. Create clusters using cloud-native tools, and benefit from high resilience and optimized costs through autoscaling and hibernation. Managed Kubernetes is a robust and reliable solution with a touch of Dutch innovation.
 
 ## 1. Create an account
-Create a Fuga Cloud Account on [https://my.fuga.cloud](https://my.fuga.cloud).
+Create a Cyso Cloud Account on [https://my.Cyso.cloud](https://my.Cyso.cloud).
 
 ## 2. Create Kubernetes Cluster
 
-Login to the Fuga Cloud Dashboard to create a Kubernetes Clusters on OpenStack. To do this navigate to "EMK" in the sidebar or follow this link [https://my.fuga.cloud/managed-kubernetes](https://my.fuga.cloud/managed-kubernetes).
+Login to the Cyso Cloud Dashboard to create Kubernetes Clusters on OpenStack. To do this navigate to "EMK" in the sidebar or follow this link [https://my.Cyso.cloud/managed-kubernetes](https://my.Cyso.cloud/managed-kubernetes).
 
 In the "Clusters" menu, select the "Create cluster +". A new page appears to create a new Kubernetes cluster.
 - Select the region of your cluster
@@ -20,45 +20,9 @@ In the "Clusters" menu, select the "Create cluster +". A new page appears to cre
 
 ## 3. Get the kubeconfig
 
-### below version v1.27
-
-Follow these steps with static kubeconfig enabled, otherwise follow the ones for v1.27 and newer.
+From version v1.27 it is not allowed to use static kubeconfigs. There for it is only possible from the interface to download a time limited access kubeconfig.
 
 Go to the "EMK" tab and select your cluster, view "access" to copy or download your kubeconfig.
-
-### version v1.27 and newer
-
-From version v1.27 it is not allowed to use static kubeconfigs.
-
-To get access the cluster some extra steps are required. From now on it is only possible to request a temporary or known as dynamic kubeconfig.
-
-Go to the "EMK" tab and select the "Service Accounts" sub tab. Here you can use the already created "default" or create one yourself. It is required to have the `admin` role enabled. Download the service account kubeconfig.
-
-Then create the file `kubeconfig-request.json`:
-```bash
-% cat > kubeconfig-request.json <<EOF
-{
-    "apiVersion": "authentication.gardener.cloud/v1alpha1",
-    "kind": "AdminKubeconfigRequest",
-    "spec": {
-        "expirationSeconds": 3600
-    }
-}
-EOF
-```
-Then request a cluster kubeconfig that has an expiration time for 1h:
-```bash
-% NAMESPACE=garden-<your_emk_project_name>
-% SHOOT=<your_shoot_name>
-
-% kubectl create \
-    --kubeconfig service-account-kubeconfig.yaml \
-    --filename ./kubeconfig-request.json \
-    --raw /apis/core.gardener.cloud/v1beta1/namespaces/${NAMESPACE}/shoots/${SHOOT}/adminkubeconfig \
-    | jq -r ".status.kubeconfig | @base64d" \
-    > config-${SHOOT}.yaml
-```
-Then access to the cluster is possible through the `config-<shoot>.yaml` kubeconfig.
 
 ## 4. Install Sonobuoy
 
